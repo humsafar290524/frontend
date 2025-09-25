@@ -9,7 +9,8 @@ export default function AdminPage() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [filters, setFilters] = useState({ name: '', caste: '', residence: '', gender: '', status: '' })
-  const [openAdd, setOpenAdd] = useState(false)
+  const [openEdit, setOpenEdit] = useState(false)
+  const [editingItem, setEditingItem] = useState(null)
   const [page, setPage] = useState(1)
   const [total, setTotal] = useState(0)
   const limit = 20
@@ -60,6 +61,23 @@ export default function AdminPage() {
     }
   }
 
+  async function handleEdit(item) {
+    setEditingItem(item)
+    setOpenEdit(true)
+  }
+
+  async function handleUpdate(payload) {
+    setError('')
+    try {
+      await api.updateBiodata(editingItem._id, payload)
+      await fetchItems()
+      setOpenEdit(false)
+      setEditingItem(null)
+    } catch (e) {
+      setError(e.message || 'Failed to update biodata record')
+    }
+  }
+
   return (
     <div>
       <header style={{ marginBottom: 12, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -75,20 +93,20 @@ export default function AdminPage() {
 
       <div className="card" style={{ marginBottom: 16 }}>
         <h3 style={{ marginTop: 0 }}>Filters</h3>
-        <div className="grid grid-3">
-          <div>
+        <div className="inline-filters">
+          <div className="filter-item">
             <label>Name</label>
             <input value={filters.name} onChange={e => updateFilter({ name: e.target.value })} />
           </div>
-          <div>
+          <div className="filter-item">
             <label>Caste</label>
             <input value={filters.caste} onChange={e => updateFilter({ caste: e.target.value })} />
           </div>
-          <div>
+          <div className="filter-item">
             <label>Residence</label>
             <input value={filters.residence} onChange={e => updateFilter({ residence: e.target.value })} />
           </div>
-          <div>
+          <div className="filter-item gender">
             <label>Gender</label>
             <select value={filters.gender} onChange={e => updateFilter({ gender: e.target.value })}>
               <option value="">Any</option>
@@ -97,18 +115,18 @@ export default function AdminPage() {
               <option>Other</option>
             </select>
           </div>
-          <div>
+          <div className="filter-item status">
             <label>Status</label>
             <input value={filters.status} onChange={e => updateFilter({ status: e.target.value })} />
           </div>
-        </div>
-        <div style={{ marginTop: 12 }}>
-          <button onClick={() => { setPage(1); fetchItems() }}>Apply</button>
+          <div className="filter-item apply">
+            <button onClick={() => { setPage(1); fetchItems() }}>Apply</button>
+          </div>
         </div>
       </div>
 
-      <Modal open={openAdd} onClose={() => setOpenAdd(false)} title="Add New Biodata">
-        <BiodataForm onSubmit={handleCreate} />
+      <Modal open={openEdit} onClose={() => { setOpenEdit(false); setEditingItem(null); }} title="Edit Biodata">
+        <BiodataForm onSubmit={handleUpdate} initialData={editingItem} />
       </Modal>
 
       <div className="card">
@@ -117,7 +135,7 @@ export default function AdminPage() {
           <div>Loading...</div>
         ) : (
           <>
-            <BiodataTable items={items} onDelete={handleDelete} />
+            <BiodataTable items={items} onDelete={handleDelete} onEdit={handleEdit} />
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 12 }}>
               <div>Page {page} of {Math.max(1, Math.ceil(total / limit))} — Total {total}</div>
               <div className="actions">

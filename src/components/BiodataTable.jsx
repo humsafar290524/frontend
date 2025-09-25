@@ -7,7 +7,7 @@ function fmtDate(d) {
   return dt.toLocaleDateString()
 }
 
-export default function BiodataTable({ items, onDelete }) {
+export default function BiodataTable({ items, onDelete, onEdit }) {
   return (
     <div style={{ overflowX: 'auto' }}>
       <table>
@@ -65,6 +65,7 @@ export default function BiodataTable({ items, onDelete }) {
               <td>{it.status}</td>
               <td>{fmtDate(it.biodataSubmittedDate)}</td>
               <td className="actions">
+                <button className="primary" onClick={() => onEdit?.(it)}>View</button>
                 <button className="danger" onClick={() => onDelete?.(it._id)}>Delete</button>
               </td>
             </tr>

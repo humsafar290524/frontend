@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 
 const initial = {
   serialNo: '',
@@ -29,12 +29,33 @@ const initial = {
   biodataSubmittedBy: '',
 }
 
-export default function BiodataForm({ onSubmit }) {
+export default function BiodataForm({ onSubmit, initialData }) {
   const [form, setForm] = useState(initial)
   const [submitting, setSubmitting] = useState(false)
   const [casteOther, setCasteOther] = useState('')
   const [prefCasteOther, setPrefCasteOther] = useState('')
   const [professionOther, setProfessionOther] = useState('')
+  useEffect(() => {
+    if (initialData) {
+      // Format dates for the form inputs
+      const formattedData = {
+        ...initialData,
+        dob: initialData.dob ? new Date(initialData.dob).toISOString().split('T')[0] : '',
+        biodataSubmittedDate: initialData.biodataSubmittedDate ? new Date(initialData.biodataSubmittedDate).toISOString().split('T')[0] : '',
+      }
+
+      // Handle "Other" values for dropdowns
+      setForm(formattedData)
+      setCasteOther(initialData.caste && !['No Caste', 'Syed', 'Sayyid', 'Sheikh', 'Shaikh', 'Khan', 'Pathan', 'Mughal', 'Ansari', 'Qureshi', 'Farooqui', 'Siddiqui', 'Usmani', 'Abbasi', 'Alvi', 'Hashmi', 'Naqvi', 'Rizvi', 'Kazmi', 'Zaidi', 'Bukhari', 'Gilani', 'Jafri', 'Baig', 'Mirza', 'Butt', 'Malik', 'Bhat', 'Chaudhary', 'Memoni', 'Memon', 'Khoja', 'Bohra', 'Dawoodi Bohra', 'Cutchi Memon', 'Qasmi', 'Tamboli', 'Saifi', 'Mansoori', 'Faruqi', 'Qadri', 'Shah'].includes(initialData.caste) ? initialData.caste : '')
+      setPrefCasteOther(initialData.prefCaste && !['No Caste', 'Syed', 'Sayyid', 'Sheikh', 'Shaikh', 'Khan', 'Pathan', 'Mughal', 'Ansari', 'Qureshi', 'Farooqui', 'Siddiqui', 'Usmani', 'Abbasi', 'Alvi', 'Hashmi', 'Naqvi', 'Rizvi', 'Kazmi', 'Zaidi', 'Bukhari', 'Gilani', 'Jafri', 'Baig', 'Mirza', 'Butt', 'Malik', 'Bhat', 'Chaudhary', 'Memoni', 'Memon', 'Khoja', 'Bohra', 'Dawoodi Bohra', 'Cutchi Memon', 'Qasmi', 'Tamboli', 'Saifi', 'Mansoori', 'Faruqi', 'Qadri', 'Shah'].includes(initialData.prefCaste) ? initialData.prefCaste : '')
+      setProfessionOther(initialData.profession && !['Software Engineer','Doctor','Engineer','Teacher','Professor','Business','Entrepreneur','Accountant','Banker','Lawyer','Civil Services','Government Job','Defence','Police','Architect','Dentist','Pharmacist','Nurse','Consultant','Designer','Marketing','Sales','Operations','HR','Finance','Media/Journalism','Artist','Student','Not Working'].includes(initialData.profession) ? initialData.profession : '')
+    } else {
+      setForm(initial)
+      setCasteOther('')
+      setPrefCasteOther('')
+      setProfessionOther('')
+    }
+  }, [initialData])
 
   const countries = [
     'India','Pakistan','Bangladesh','Sri Lanka','Nepal','Bhutan','Maldives','Afghanistan',
@@ -80,7 +101,7 @@ export default function BiodataForm({ onSubmit }) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="grid grid-3">
+    <form onSubmit={handleSubmit} className="grid grid-4">
       <div>
         <label>S. No</label>
         <input value={form.serialNo} onChange={e => setField('serialNo', e.target.value)} />
@@ -333,7 +354,24 @@ export default function BiodataForm({ onSubmit }) {
 
       <div style={{ gridColumn: '1 / -1', display: 'flex', gap: 8 }}>
         <button type="submit" disabled={submitting}>{submitting ? 'Saving...' : 'Save'}</button>
-        <button type="button" className="secondary" onClick={() => setForm(initial)} disabled={submitting}>Reset</button>
+        <button type="button" className="secondary" onClick={() => {
+          if (initialData) {
+            const formattedData = {
+              ...initialData,
+              dob: initialData.dob ? new Date(initialData.dob).toISOString().split('T')[0] : '',
+              biodataSubmittedDate: initialData.biodataSubmittedDate ? new Date(initialData.biodataSubmittedDate).toISOString().split('T')[0] : '',
+            }
+            setForm(formattedData)
+            setCasteOther(initialData.caste && !['No Caste', 'Syed', 'Sayyid', 'Sheikh', 'Shaikh', 'Khan', 'Pathan', 'Mughal', 'Ansari', 'Qureshi', 'Farooqui', 'Siddiqui', 'Usmani', 'Abbasi', 'Alvi', 'Hashmi', 'Naqvi', 'Rizvi', 'Kazmi', 'Zaidi', 'Bukhari', 'Gilani', 'Jafri', 'Baig', 'Mirza', 'Butt', 'Malik', 'Bhat', 'Chaudhary', 'Memoni', 'Memon', 'Khoja', 'Bohra', 'Dawoodi Bohra', 'Cutchi Memon', 'Qasmi', 'Tamboli', 'Saifi', 'Mansoori', 'Faruqi', 'Qadri', 'Shah'].includes(initialData.caste) ? initialData.caste : '')
+            setPrefCasteOther(initialData.prefCaste && !['No Caste', 'Syed', 'Sayyid', 'Sheikh', 'Shaikh', 'Khan', 'Pathan', 'Mughal', 'Ansari', 'Qureshi', 'Farooqui', 'Siddiqui', 'Usmani', 'Abbasi', 'Alvi', 'Hashmi', 'Naqvi', 'Rizvi', 'Kazmi', 'Zaidi', 'Bukhari', 'Gilani', 'Jafri', 'Baig', 'Mirza', 'Butt', 'Malik', 'Bhat', 'Chaudhary', 'Memoni', 'Memon', 'Khoja', 'Bohra', 'Dawoodi Bohra', 'Cutchi Memon', 'Qasmi', 'Tamboli', 'Saifi', 'Mansoori', 'Faruqi', 'Qadri', 'Shah'].includes(initialData.prefCaste) ? initialData.prefCaste : '')
+            setProfessionOther(initialData.profession && !['Software Engineer','Doctor','Engineer','Teacher','Professor','Business','Entrepreneur','Accountant','Banker','Lawyer','Civil Services','Government Job','Defence','Police','Architect','Dentist','Pharmacist','Nurse','Consultant','Designer','Marketing','Sales','Operations','HR','Finance','Media/Journalism','Artist','Student','Not Working'].includes(initialData.profession) ? initialData.profession : '')
+          } else {
+            setForm(initial)
+            setCasteOther('')
+            setPrefCasteOther('')
+            setProfessionOther('')
+          }
+        }} disabled={submitting}>Reset</button>
       </div>
     </form>
   )
