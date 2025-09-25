@@ -1,9 +1,2 @@
-import React from 'react'
-import { createRoot } from 'react-dom/client'
-import App from './App.jsx'
-
-createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-)
+// This file is no longer needed - Create React App uses src/index.js as entry point
+// Delete this file - it's causing conflicts with the development server

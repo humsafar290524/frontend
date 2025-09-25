@@ -1,11 +1,11 @@
-// const BASE_URL = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api').replace(/\/$/, '')
-const BASE_URL = (import.meta.env.VITE_API_BASE_URL || 'https://backend-hdvh.onrender.com/api').replace(/\/$/, '')
+// const BASE_URL = (process.env.REACT_APP_API_BASE_URL || 'https://backend-hdvh.onrender.com/api').replace(/\/$/, '')
+const BASE_URL = (process.env.REACT_APP_API_BASE_URL || 'http://localhost:5000/api').replace(/\/$/, '')
 
 async function http(path, { method = 'GET', body, headers } = {}) {
   const res = await fetch(`${BASE_URL}${path}`, {
     method,
     headers: {
-      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${localStorage.getItem('token')}`,
       ...headers,
     },
     body: body ? JSON.stringify(body) : undefined,
