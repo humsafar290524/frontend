@@ -10,6 +10,7 @@ export default function AdminPage() {
   const [error, setError] = useState('')
   const [filters, setFilters] = useState({ name: '', caste: '', residence: '', gender: '', status: '' })
   const [openEdit, setOpenEdit] = useState(false)
+  const [openAdd, setOpenAdd] = useState(false)
   const [editingItem, setEditingItem] = useState(null)
   const [page, setPage] = useState(1)
   const [total, setTotal] = useState(0)
@@ -31,7 +32,6 @@ export default function AdminPage() {
 
   useEffect(() => {
     fetchItems()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   // When filters change via inputs, update state and reset to page 1
@@ -52,11 +52,20 @@ export default function AdminPage() {
     }
   }
 
+  const [deleteConfirm, setDeleteConfirm] = useState({ open: false, id: null })
+
   async function handleDelete(id) {
-    if (!confirm('Delete this record?')) return
+    setDeleteConfirm({ open: true, id })
+  }
+
+  async function confirmDelete() {
+    const { id } = deleteConfirm
+    if (!id) return
+
     try {
       await api.deleteBiodata(id)
       await fetchItems()
+      setDeleteConfirm({ open: false, id: null })
     } catch (e) {
       setError(e.message || 'Failed to delete')
     }
@@ -128,6 +137,31 @@ export default function AdminPage() {
 
       <Modal open={openEdit} onClose={() => { setOpenEdit(false); setEditingItem(null); }} title="Edit Biodata">
         <BiodataForm onSubmit={handleUpdate} initialData={editingItem} />
+      </Modal>
+
+      <Modal open={openAdd} onClose={() => setOpenAdd(false)} title="Add New Biodata">
+        <BiodataForm onSubmit={handleCreate} />
+      </Modal>
+
+      <Modal open={deleteConfirm.open} onClose={() => setDeleteConfirm({ open: false, id: null })} title="Confirm Delete">
+        <div style={{ padding: '20px', textAlign: 'center' }}>
+          <p>Are you sure you want to delete this record?</p>
+          <p style={{ color: '#dc3545', fontWeight: 'bold' }}>This action cannot be undone.</p>
+          <div style={{ display: 'flex', gap: '10px', justifyContent: 'center', marginTop: '20px' }}>
+            <button
+              onClick={() => setDeleteConfirm({ open: false, id: null })}
+              style={{ padding: '8px 16px', background: '#6c757d', color: 'white', border: 'none', borderRadius: '4px' }}
+            >
+              Cancel
+            </button>
+            <button
+              onClick={confirmDelete}
+              style={{ padding: '8px 16px', background: '#dc3545', color: 'white', border: 'none', borderRadius: '4px' }}
+            >
+              Delete
+            </button>
+          </div>
+        </div>
       </Modal>
 
       <div className="card">

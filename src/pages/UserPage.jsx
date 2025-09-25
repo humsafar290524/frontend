@@ -70,7 +70,6 @@ export default function UserPage() {
 
   useEffect(() => {
     fetchItems()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   function updateFilter(patch) {
