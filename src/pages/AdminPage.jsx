@@ -13,7 +13,7 @@ export default function AdminPage() {
   const [editingItem, setEditingItem] = useState(null)
   const [page, setPage] = useState(1)
   const [total, setTotal] = useState(0)
-  const limit = 20
+  const limit = 15
 
   async function fetchItems() {
     setLoading(true)
@@ -32,12 +32,13 @@ export default function AdminPage() {
   useEffect(() => {
     fetchItems()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page])
+  }, [])
 
   // When filters change via inputs, update state and reset to page 1
   function updateFilter(patch) {
     setFilters(prev => ({ ...prev, ...patch }))
     setPage(1)
+    fetchItems()
   }
 
   async function handleCreate(payload) {
@@ -136,12 +137,8 @@ export default function AdminPage() {
         ) : (
           <>
             <BiodataTable items={items} onDelete={handleDelete} onEdit={handleEdit} />
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 12 }}>
-              <div>Page {page} of {Math.max(1, Math.ceil(total / limit))} — Total {total}</div>
-              <div className="actions">
-                <button className="secondary" onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page <= 1}>Prev</button>
-                <button onClick={() => setPage(p => (p * limit < total ? p + 1 : p))} disabled={page * limit >= total}>Next</button>
-              </div>
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: 12 }}>
+              <div>Showing {items.length} of {total} biodata records</div>
             </div>
           </>
         )}

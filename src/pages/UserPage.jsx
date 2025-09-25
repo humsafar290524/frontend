@@ -52,7 +52,7 @@ export default function UserPage() {
   const [filters, setFilters] = useState({ name: '', caste: '', residence: '', gender: '', status: 'Active' })
   const [page, setPage] = useState(1)
   const [total, setTotal] = useState(0)
-  const limit = 20
+  const limit = 15
 
   async function fetchItems() {
     setLoading(true)
@@ -71,11 +71,12 @@ export default function UserPage() {
   useEffect(() => {
     fetchItems()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page])
+  }, [])
 
   function updateFilter(patch) {
     setFilters(prev => ({ ...prev, ...patch }))
     setPage(1)
+    fetchItems()
   }
 
   return (
@@ -86,20 +87,20 @@ export default function UserPage() {
 
       <div className="card" style={{ marginBottom: 12 }}>
         <h3 style={{ marginTop: 0 }}>Filters</h3>
-        <div className="grid grid-3">
-          <div>
+        <div className="inline-filters">
+          <div className="filter-item">
             <label>Name</label>
             <input placeholder="Name" value={filters.name} onChange={e => updateFilter({ name: e.target.value })} />
           </div>
-          <div>
+          <div className="filter-item">
             <label>Caste</label>
             <input placeholder="Caste" value={filters.caste} onChange={e => updateFilter({ caste: e.target.value })} />
           </div>
-          <div>
+          <div className="filter-item">
             <label>Residence</label>
             <input placeholder="City/State" value={filters.residence} onChange={e => updateFilter({ residence: e.target.value })} />
           </div>
-          <div>
+          <div className="filter-item gender">
             <label>Gender</label>
             <select value={filters.gender} onChange={e => updateFilter({ gender: e.target.value })}>
               <option value="">Any</option>
@@ -108,13 +109,13 @@ export default function UserPage() {
               <option>Other</option>
             </select>
           </div>
-          <div>
+          <div className="filter-item status">
             <label>Status</label>
             <input value={filters.status} onChange={e => updateFilter({ status: e.target.value })} />
           </div>
-        </div>
-        <div style={{ marginTop: 12 }}>
-          <button onClick={() => { setPage(1); fetchItems() }}>Apply</button>
+          <div className="filter-item apply">
+            <button onClick={fetchItems}>Apply</button>
+          </div>
         </div>
       </div>
 
@@ -134,12 +135,8 @@ export default function UserPage() {
               <div className="card">No results</div>
             )}
           </div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 12 }}>
-            <div>Page {page} of {Math.max(1, Math.ceil(total / limit))} — Total {total}</div>
-            <div className="actions">
-              <button className="secondary" onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page <= 1}>Prev</button>
-              <button onClick={() => setPage(p => (p * limit < total ? p + 1 : p))} disabled={page * limit >= total}>Next</button>
-            </div>
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: 12 }}>
+            <div>Showing {items.length} of {total} biodata records</div>
           </div>
         </>
       )}
