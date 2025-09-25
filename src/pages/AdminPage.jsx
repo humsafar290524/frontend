@@ -121,7 +121,7 @@ export default function AdminPage() {
             <input value={filters.status} onChange={e => updateFilter({ status: e.target.value })} />
           </div>
           <div className="filter-item apply">
-            <button onClick={() => { setPage(1); fetchItems() }}>Apply</button>
+            <button onClick={fetchItems}>Apply</button>
           </div>
         </div>
       </div>
