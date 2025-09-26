@@ -2,15 +2,20 @@
 <html>
 
 <head>
-  <meta http-equiv="refresh" content="0; url=/frontend/" />
+  <meta charset="utf-8" />
+  <title>Redirecting...</title>
+  <script>
+    // Repo name
+    const repo = "/frontend";
+    // Preserve path/query/hash
+    const path = window.location.pathname.replace(repo, "");
+    const newUrl = window.location.origin + repo + path + window.location.search + window.location.hash;
+    window.location.replace(newUrl);
+  </script>
 </head>
 
 <body>
-  <script>
-    // Redirect preserving the path/query
-    var redirectTo = window.location.protocol + "//" + window.location.host + "/frontend" + window.location.pathname + window.location.search;
-    window.location.replace(redirectTo);
-  </script>
+  Redirecting...
 </body>
 
 </html>
