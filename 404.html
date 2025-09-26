@@ -2,10 +2,14 @@
 <html>
 
 <head>
-  <meta http-equiv="refresh" content="0; url=/frontend/index.html" />
+  <meta charset="UTF-8" />
+  <script type="text/javascript">
+    // Redirect all 404 pages to index.html preserving the path
+    var path = window.location.pathname;
+    window.location.replace("/frontend/index.html" + path);
+  </script>
 </head>
 
-<body>
-</body>
+<body></body>
 
 </html>
